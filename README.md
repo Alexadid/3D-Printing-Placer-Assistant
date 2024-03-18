@@ -15,8 +15,8 @@
 
 In the context of 3D printing, an overhang refers to any part of the model that extends beyond a certain angle relative to the vertical axis and lacks direct support from the layers below. The 3D Printing Placer Assistant specifically identifies two types of overhangs:
 
-1. Isolated Regions: These are portions of a model that, when viewed in a sliced layer, do not connect directly to the layer below. This effectively means they are "floating" in mid-air, creating a practical overhang angle of more than 90 degrees. These regions require support to be printed successfully.
-
-2. Angled Overhangs: This type involves parts of the model that are connected to the layer below but at an angle greater than 45 degrees. By analyzing consecutive slices, if the normal line drawn through the edges of contours forms an angle exceeding 45 degrees with the vertical, that portion is flagged as an overhang. These areas often need support structures to maintain print quality and integrity.
-
 ![Overhangs diagram: angled and isolated](Images/overhang-example.svg)
+
+1. Angled Overhangs: This type involves parts of the model that are connected to the layer below but at an angle greater than 45 degrees. By analyzing consecutive slices, if the normal line drawn through the edges of contours forms an angle exceeding 45 degrees with the vertical, that portion is flagged as an overhang. These areas often need support structures to maintain print quality and integrity.
+
+2. 2. Isolated Regions: These are portions of a model that, when viewed in a sliced layer, do not connect directly to the layer below. This effectively means they are "floating" in mid-air, creating a practical overhang angle of more than 90 degrees. These regions require support to be printed successfully.
