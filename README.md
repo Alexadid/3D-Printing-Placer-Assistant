@@ -5,7 +5,7 @@
 
 ## Features
 - **Automatic Overhang Detection**: Quickly scans STL files to highlight all overhanging sections that require supports.
-- **Visualization**: Offers a visual representation of the STL file, with overhangs prominently marked, facilitating easy inspection and planning.
+- **Visualization** (WIP): Offers a visual representation of the STL file, with overhangs prominently marked, facilitating easy inspection and planning.
 - **Customizable Slicing Parameters**: Allows users to adjust slicing parameters for more precise control over the detection process.
 - **Cross-Platform Compatibility**: Works on multiple operating systems, ensuring wide accessibility.
 
