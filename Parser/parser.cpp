@@ -202,6 +202,25 @@ public:
             std::cout << std::endl;
         }
     }
+
+    void printGraphStats() const
+    {
+        std::cout << "Graph Stats:" << std::endl;
+        std::cout << "Total vertices: " << graph.vertices.size() << std::endl;
+        std::cout << "Total edges: " << graph.edges.size() << std::endl;
+
+        // Results may be contrintuitive unless you consider that the STL is built up out of triangles
+        for (const auto& vertexPair : graph.vertices)
+        {
+            auto range = graph.edges.equal_range(vertexPair.first);
+            std::cout << "Vertex " << vertexPair.first << " (" << vertexPair.second << ") is connected to: ";
+            for (auto it = range.first; it != range.second; ++it)
+            {
+                std::cout << it->second.endVertexId << " ";
+            }
+            std::cout << std::endl;
+    }
+}
 };
 
 // Derived class for handling Binary STL files
@@ -284,6 +303,8 @@ int main()
     std::cout << "ASCII STL Vertices:" << std::endl;
     // Print the vertices
     asciiStl.printVertices();
+
+    asciiStl.printGraphStats();
 
     /*
     // Example usage for Binary STL file
