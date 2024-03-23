@@ -4,6 +4,9 @@
 #include <string>
 #include <array>
 #include <sstream>
+#include <unordered_map>
+#include <unordered_set>
+#include <functional>
 
 // Vertex structure to represent a single vertex in 3D space
 struct Vertex
@@ -33,6 +36,39 @@ struct Facet
         : normal(normal), vertices({v1, v2, v3}) {}
 };
 
+// Hash function for Vertex
+struct VertexHash
+{
+    size_t operator()(const Vertex& v) const
+    {
+        return std::hash<float>()(v.x) ^ std::hash<float>()(v.y) ^ std::hash<float>()(v.z);
+    }
+};
+
+// Equality comparison for Vertex
+struct VertexEqual
+{
+    bool operator()(const Vertex& v1, const Vertex& v2) const
+    {
+        return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
+    }
+};
+
+// Define a structure for edges
+struct Edge
+{
+    size_t startVertexId;
+    size_t endVertexId;
+};
+
+// Define the Graph
+class Graph
+{
+public:
+    std::unordered_map<size_t, Vertex> vertices; // Maps vertex ID to Vertex
+    std::unordered_multimap<size_t, Edge> edges; // Maps a vertex ID to its edges for quick lookup
+};
+
 // Abstract base class representing an STL file
 class STLFile
 {
@@ -51,6 +87,38 @@ class ASCII_STLFile : public STLFile
 private:
     // Container for all the facets parsed from the file
     std::vector<Facet> facets;
+    Graph graph;
+
+    void buildGraph()
+    {
+        std::unordered_map<Vertex, size_t, VertexHash, VertexEqual> vertexIds;
+        size_t currentId = 0;
+
+        for (const auto& facet : facets)
+        {
+            std::array<size_t, 3> ids;
+            for (int i = 0; i < 3; ++i)
+            {
+                const auto& v = facet.vertices[i];
+                if (vertexIds.find(v) == vertexIds.end())
+                {
+                    vertexIds[v] = currentId;
+                    graph.vertices[currentId] = v;
+                    ids[i] = currentId;
+                    currentId++;
+                } else
+                {
+                    ids[i] = vertexIds[v];
+                }
+            }
+
+            // Add edges for each facet
+            for (int i = 0; i < 3; ++i)
+            {
+                graph.edges.emplace(ids[i], Edge{ids[i], ids[(i + 1) % 3]});
+            }
+        }
+    }
 
 public:
     // Override the parse method to handle ASCII STL files
@@ -111,6 +179,8 @@ public:
                 facets.push_back(Facet(normal, vertices[0], vertices[1], vertices[2]));
             }
         }
+
+        buildGraph();
     }
 
     // Override the printVertices method to display vertices of the ASCII STL file
@@ -215,6 +285,7 @@ int main()
     // Print the vertices
     asciiStl.printVertices();
 
+    /*
     // Example usage for Binary STL file
     Binary_STLFile binaryStl;
     // Parse the Binary STL file
@@ -222,6 +293,7 @@ int main()
     std::cout << "Binary STL Vertices:" << std::endl;
     // Print the vertices
     binaryStl.printVertices();
+    */
 
     return 0;
 }
