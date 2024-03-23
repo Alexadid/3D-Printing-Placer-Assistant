@@ -22,3 +22,7 @@ In the context of 3D printing, an overhang refers to any part of the model that 
 1. Angled Overhangs: This type involves parts of the model that are connected to the layer below but at an angle greater than 45 degrees. By analyzing consecutive slices, if the normal line drawn through the edges of contours forms an angle exceeding 45 degrees with the vertical, that portion is flagged as an overhang. These areas often need support structures to maintain print quality and integrity.
 
 2. Isolated Regions: These are portions of a model that, when viewed in a sliced layer, do not connect directly to the layer below. This effectively means they are "floating" in mid-air, creating a practical overhang angle of more than 90 degrees. These regions require support to be printed successfully.
+
+### Advanced Problematic Region Identification
+
+Using overhang angles as a criteria for determining potentially problematic regions is problematic. It requires a lot of computations, meaning it is only viable when using GPUs. This is out of question in the scope of this project. That is the whole reason for the approach, implemented for the parser: the model is first turned into a graph of vertices and then every vertex, which lacks a neighboring vertex below it, is considered.
