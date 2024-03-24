@@ -2,14 +2,22 @@
 
 ## Overview
 
-3D Printing Placer Assistant is (more accurately, will be) a user-friendly tool designed to ease the 3D printing process by automating the tedious task of manual support placement. By accurately identifying overhanging parts in STL files (the task often failed by slicers such as Wanhao and Chitubox), this application not only saves time but also improves the printing success rate. It utilizes C++ for high-efficiency calculations and Python for a seamless graphical user interface (WIP), making it accessible to everyone.
+3D Printing Placer Assistant is a user-friendly tool designed to ease the 3D printing process by automating the tedious task of manual support placement. By accurately identifying overhanging parts in STL files (the task often failed by slicers such as Wanhao and Chitubox), this application not only saves time but also improves the printing success rate. It utilizes C++ for calculations and Python for a graphical user interface (WIP).
+
+## Requirements and Dependencies
+
+Before you get started with the 3D Printing Placer Assistant, ensure you have the following requirements met:
+
+- **Python 3.6 or later**: The graphical user interface and some parts of the processing are implemented in Python.
+- **Python reuirements**:  Install the required Python libraries using pip (pip install -r requirements.txt).
+- **C++ Compiler**: The core logic for parsing STL files and identifying problematic regions is written in C++. This project utilizes g++ by default, but you may have to change the target compiler in the app.py.
 
 ## Features
 
-- **Automatic Overhang Detection**: Quickly scans STL files to highlight all overhanging sections that require supports.
-- **Visualization** (WIP): Offers a visual representation of the STL file, with overhangs prominently marked, facilitating easy inspection and planning.
-- **Customizable Slicing Parameters**: Allows users to adjust slicing parameters for more precise control over the detection process.
+- **Automatic Overhang Detection**: Quickly scans STL files to highlight all overhanging sections that may require supports.
+- **Visualization**: Offers a visual representation of the STL file, with overhangs prominently marked, facilitating easy inspection and planning.
 - **Cross-Platform Compatibility**: Works on multiple operating systems, ensuring wide accessibility.
+- **Install and Run**: once you install all dependencies, you can write app.py.
 
 ## Getting Started
 
