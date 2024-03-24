@@ -1,8 +1,9 @@
 #include "parser.hpp"
 #include <cmath>
 
+
 // Constructor with default parameters allowing for easy instantiation
-Vertex::Vertex(double x, double y, double z) : x(x), y(y), z(z) {}
+Vertex::Vertex(float x, float y, float z) : x(x), y(y), z(z) {}
 
 // Overload the << operator to enable easy printing of Vertex objects
 std::ostream& operator<<(std::ostream& os, const Vertex& v)
@@ -11,8 +12,8 @@ std::ostream& operator<<(std::ostream& os, const Vertex& v)
     return os;
 }
 
-// Facet structure represents a single triangular facet of the STL model
-Facet::Facet(const Vertex& normal, const Vertex& v1, const Vertex& v2, const Vertex& v3)
+// facet structure represents a single triangular facet of the STL model
+facet::facet(const Vertex& normal, const Vertex& v1, const Vertex& v2, const Vertex& v3)
     : normal(normal), vertices({v1, v2, v3}) {}
 
 // Implementation for ASCII_STLFile
@@ -70,7 +71,7 @@ void ASCII_STLFile::parse(const std::string& filepath)
             std::getline(file, line);
 
             // Add the facet to the vector
-            facets.push_back(Facet(normal, vertices[0], vertices[1], vertices[2]));
+            facets.push_back(facet(normal, vertices[0], vertices[1], vertices[2]));
         }
     }
 
@@ -83,7 +84,7 @@ void ASCII_STLFile::printVertices() const
     for (const auto& facet : facets)
     {
         // Print the normal
-        std::cout << "Facet normal: " << facet.normal << std::endl;
+        std::cout << "facet normal: " << facet.normal << std::endl;
         // Iterate over the vertices of each facet
         for (const auto& vertex : facet.vertices)
         {
@@ -148,8 +149,8 @@ void ASCII_STLFile::printGraphStats() const
 
 void ASCII_STLFile::identifySupportChallenges() const
 {
-    double minY = std::numeric_limits<double>::max();
-    //double maxY = std::numeric_limits<double>::min();
+    float minY = std::numeric_limits<float>::max();
+    //float maxY = std::numeric_limits<float>::min();
     for (const auto& vertexPair : graph.vertices)
     {
         minY = std::min(minY, vertexPair.second.y);
@@ -160,8 +161,8 @@ void ASCII_STLFile::identifySupportChallenges() const
     //std::cout << maxY << std::endl;
 
     // Threshold to consider a vertex as part of the model's bottom
-    const double bottomThreshold = minY;
-    //const double bottomThresholdTolerance = (maxY - minY) / 100000.0;
+    const float bottomThreshold = minY;
+    //const float bottomThresholdTolerance = (maxY - minY) / 100000.0;
     //std::cout << bottomThresholdTolerance << std::endl;
 
     std::vector<size_t> problematicVertices;
@@ -214,10 +215,8 @@ void Binary_STLFile::parse(const std::string& filepath)
         return;
     }
 
-    // Array to hold the STL file header
-    char header[80];
-    // Read the header (unused)
-    file.read(header, 80);
+     // Ignore the header
+    file.ignore(80);
     // Variable to store the number of triangles
     unsigned int triangleCount;
     // Read the triangle count
@@ -239,7 +238,7 @@ void Binary_STLFile::parse(const std::string& filepath)
         // Read vertex 3
         file.read(reinterpret_cast<char*>(&v3), sizeof(Vertex));
         // Add the facet to the vector
-        facets.push_back(Facet(normal, v1, v2, v3));
+        facets.push_back(facet(normal, v1, v2, v3));
 
         //std::cout << facets[i].normal << std::endl;
 
@@ -256,7 +255,7 @@ void Binary_STLFile::printVertices() const
     for (const auto& facet : facets)
     {
         // Print the normal
-        std::cout << "Facet normal: " << facet.normal << std::endl;
+        std::cout << "facet normal: " << facet.normal << std::endl;
         // Iterate over the vertices of each facet
         for (const auto& vertex : facet.vertices)
         {
@@ -321,8 +320,8 @@ void Binary_STLFile::printGraphStats() const
 
 void Binary_STLFile::identifySupportChallenges() const
 {
-    double minY = std::numeric_limits<double>::max();
-    //double maxY = std::numeric_limits<double>::min();
+    float minY = std::numeric_limits<float>::max();
+    //float maxY = std::numeric_limits<float>::min();
     for (const auto& vertexPair : graph.vertices)
     {
         minY = std::min(minY, vertexPair.second.y);
@@ -333,8 +332,8 @@ void Binary_STLFile::identifySupportChallenges() const
     //std::cout << maxY << std::endl;
 
     // Threshold to consider a vertex as part of the model's bottom
-    const double bottomThreshold = minY;
-    //const double bottomThresholdTolerance = (maxY - minY) / 100000.0;
+    const float bottomThreshold = minY;
+    //const float bottomThresholdTolerance = (maxY - minY) / 100000.0;
     //std::cout << bottomThresholdTolerance << std::endl;
 
     std::vector<size_t> problematicVertices;

@@ -16,9 +16,9 @@
 struct Vertex
 {
     // Coordinates of the vertex
-    double x, y, z;
+    float x, y, z;
     // Constructor with default parameters allowing for easy instantiation
-    Vertex(double x = 0.0, double y = 0.0, double z = 0.0);
+    Vertex(float x = 0.0, float y = 0.0, float z = 0.0);
 };
 
 // Hash function for Vertex
@@ -26,7 +26,7 @@ struct VertexHash
 {
     size_t operator()(const Vertex& v) const
     {
-        return std::hash<double>()(v.x) ^ std::hash<double>()(v.y) ^ std::hash<double>()(v.z);
+        return std::hash<float>()(v.x) ^ std::hash<float>()(v.y) ^ std::hash<float>()(v.z);
     }
 };
 
@@ -42,15 +42,15 @@ struct VertexEqual
 // Overload the << operator to enable easy printing of Vertex objects
 std::ostream& operator<<(std::ostream& os, const Vertex& v);
 
-// Facet structure represents a single triangular facet of the STL model
-struct Facet
+// facet structure represents a single triangular facet of the STL model
+struct facet
 {
     // Normal vector of the facet
     Vertex normal;
     // Array of vertices (triangle) making up the facet
     std::array<Vertex, 3> vertices;
     // Constructor initializes the facet with its normal and vertices
-    Facet(const Vertex& normal, const Vertex& v1, const Vertex& v2, const Vertex& v3);
+    facet(const Vertex& normal, const Vertex& v1, const Vertex& v2, const Vertex& v3);
 };
 
 // Edge structure to represent a single edge via 2 unique ids (hashed)
@@ -93,7 +93,7 @@ class ASCII_STLFile : public STLFile
 {
 private:
     // Container for all the facets parsed from the file
-    std::vector<Facet> facets;
+    std::vector<facet> facets;
     Graph graph;
 
 public:
@@ -110,7 +110,7 @@ public:
 class Binary_STLFile : public STLFile
 {
 private:
-    std::vector<Facet> facets;
+    std::vector<facet> facets;
     Graph graph;
 
 public:
