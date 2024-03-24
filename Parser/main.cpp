@@ -6,30 +6,27 @@ int main()
     // Example usage for ASCII STL file
     ASCII_STLFile asciiStl;
     // Parse the ASCII STL file
-    asciiStl.parse("../Models/Cube-ASCII.stl");
-    std::cout << "ASCII STL Vertices:" << std::endl;
+    asciiStl.parse("../Models/Test_sword_ASCII.stl");
+    //std::cout << "ASCII STL Vertices:" << std::endl;
     // Print the vertices
-    asciiStl.printVertices();
+    //asciiStl.printVertices();
     // Print graph's statistics
-    asciiStl.printGraphStats();
+    //asciiStl.printGraphStats();
     // Examplary usage of function to identify problematic points
     asciiStl.identifySupportChallenges();
 
-    // !!!
-    // Currently unavailable due to very strange behavior with Fusion 360 generated binary STLs
-    // !!!
 
-    /*
+    
     // Example usage for Binary STL file
     Binary_STLFile binaryStl;
     // Parse the Binary STL file
-    binaryStl.parse("../Models/Cube-Binary.stl");
-    std::cout << "Binary STL Vertices:" << std::endl;
+    binaryStl.parse("../Models/Test_sword_Binary.stl");
+    //std::cout << "Binary STL Vertices:" << std::endl;
     // Print the vertices
-    binaryStl.printVertices();
+    //binaryStl.printVertices();
 
-    //binaryStl.identifySupportChallenges();
-    */
+    binaryStl.identifySupportChallenges();
+    
 
     return 0;
 }
