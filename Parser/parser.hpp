@@ -106,6 +106,11 @@ public:
     void identifySupportChallenges() const override;
 };
 
+// Constant values for parsing binary STLs
+const int HEADER_SIZE       = 80;
+const int FACET_SIZE        = 50;
+const int ATTRIBUTE_SIZE    = 2;
+
 // Derived class for handling Binary STL files
 class Binary_STLFile : public STLFile
 {

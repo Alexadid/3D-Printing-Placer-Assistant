@@ -216,7 +216,7 @@ void Binary_STLFile::parse(const std::string& filepath)
     }
 
      // Ignore the header
-    file.ignore(80);
+    file.ignore(HEADER_SIZE);
     // Variable to store the number of triangles
     unsigned int triangleCount;
     // Read the triangle count
@@ -243,7 +243,7 @@ void Binary_STLFile::parse(const std::string& filepath)
         //std::cout << facets[i].normal << std::endl;
 
         // Skip the attribute byte count (unused)
-        file.ignore(2);
+        file.ignore(ATTRIBUTE_SIZE);
     }
 
     buildGraph();
