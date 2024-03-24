@@ -11,6 +11,7 @@
 #include <unordered_set>
 #include <functional>
 #include <limits>
+#include <thread>
 
 // Vertex structure to represent a single vertex in 3D space
 struct Vertex
@@ -70,6 +71,15 @@ public:
     std::unordered_multimap<size_t, Edge> edges;
 };
 
+enum class STLFileType
+{
+    ASCII,
+    Binary,
+    Unknown
+};
+
+STLFileType determineSTLFileType(const std::string&);
+
 // Abstract base class representing an STL file
 class STLFile
 {
@@ -83,7 +93,7 @@ public:
     // Pure virtual function to print graph's statistics
     virtual void printGraphStats() const = 0;
     // Pure virtual function to identify vertices, which may need supports
-    virtual void identifySupportChallenges() const = 0;
+    virtual std::vector<Vertex> identifySupportChallenges() const = 0;
     // Virtual destructor to ensure proper cleanup of derived classes
     virtual ~STLFile() {}
 };
@@ -103,7 +113,7 @@ public:
     void printVertices() const override;
     void buildGraph() override;
     void printGraphStats() const override;
-    void identifySupportChallenges() const override;
+    std::vector<Vertex> identifySupportChallenges() const override;
 };
 
 // Constant values for parsing binary STLs
@@ -119,11 +129,11 @@ private:
     Graph graph;
 
 public:
-    void parse(const std::string& filepath) override;
+    void parse(const std::string&) override;
     void printVertices() const override;
     void buildGraph() override;
     void printGraphStats() const override;
-    void identifySupportChallenges() const override;
+    std::vector<Vertex> identifySupportChallenges() const override;
 };
 
 #endif // PARSER_HPP

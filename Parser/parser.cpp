@@ -16,6 +16,34 @@ std::ostream& operator<<(std::ostream& os, const Vertex& v)
 facet::facet(const Vertex& normal, const Vertex& v1, const Vertex& v2, const Vertex& v3)
     : normal(normal), vertices({v1, v2, v3}) {}
 
+STLFileType determineSTLFileType(const std::string& filepath)
+{
+    std::ifstream file(filepath);
+    if (!file)
+    {
+        std::cerr << "Could not open file " << filepath << std::endl;
+        return STLFileType::Unknown;
+    }
+
+    std::string line;
+    std::getline(file, line);
+    file.close();
+
+    // Trim leading spaces if any
+    line.erase(0, line.find_first_not_of(" \t"));
+
+    // Checking if the file starts with "solid"
+    if (line.substr(0, 5) == "solid")
+    {
+        // Simple check: if it starts with "solid" then it's ASCII
+        return STLFileType::ASCII;
+    } else
+    {
+        // It's Binary
+        return STLFileType::Binary;
+    }
+}
+
 // Implementation for ASCII_STLFile
 void ASCII_STLFile::parse(const std::string& filepath)
 {
@@ -147,60 +175,36 @@ void ASCII_STLFile::printGraphStats() const
     }
 }
 
-void ASCII_STLFile::identifySupportChallenges() const
+std::vector<Vertex> ASCII_STLFile::identifySupportChallenges() const
 {
     float minY = std::numeric_limits<float>::max();
-    //float maxY = std::numeric_limits<float>::min();
-    for (const auto& vertexPair : graph.vertices)
-    {
+    for (const auto& vertexPair : graph.vertices) {
         minY = std::min(minY, vertexPair.second.y);
-        //maxY = std::max(maxY, vertexPair.second.y);
     }
 
-    //std::cout << minY << std::endl;
-    //std::cout << maxY << std::endl;
-
-    // Threshold to consider a vertex as part of the model's bottom
     const float bottomThreshold = minY;
-    //const float bottomThresholdTolerance = (maxY - minY) / 100000.0;
-    //std::cout << bottomThresholdTolerance << std::endl;
+    std::vector<Vertex> problematicVertices;
 
-    std::vector<size_t> problematicVertices;
-
-    for (const auto& vertexPair : graph.vertices)
-    {
+    for (const auto& vertexPair : graph.vertices) {
         const auto& vertex = vertexPair.second;
 
-        // Skip vertices at the model's bottom
         if (vertex.y <= bottomThreshold) continue;
 
         bool hasLowerNeighbor = false;
-
-        // Check connections for a lower neighbor
         auto range = graph.edges.equal_range(vertexPair.first);
-        for (auto it = range.first; it != range.second && !hasLowerNeighbor; ++it)
-        {
+        for (auto it = range.first; it != range.second && !hasLowerNeighbor; ++it) {
             const auto& neighborVertex = graph.vertices.at(it->second.endVertexId);
-            if (neighborVertex.y < vertex.y)
-            {
+            if (neighborVertex.y < vertex.y) {
                 hasLowerNeighbor = true;
             }
         }
 
-        // If a vertex lacks lower neighbors and isn't at the bottom, it's potentially problematic
-        if (!hasLowerNeighbor)
-        {
-            problematicVertices.push_back(vertexPair.first);
+        if (!hasLowerNeighbor) {
+            problematicVertices.push_back(vertex);
         }
     }
 
-    // Output or handle problematic vertices
-    std::cout << "Vertices potentially needing support: ";
-    for (auto id : problematicVertices)
-    {
-        std::cout << id << " ";
-    }
-    std::cout << std::endl;
+    return problematicVertices;
 }
 
 // Implementation for Binary_STLFile
@@ -318,58 +322,34 @@ void Binary_STLFile::printGraphStats() const
     }
 }
 
-void Binary_STLFile::identifySupportChallenges() const
+std::vector<Vertex> Binary_STLFile::identifySupportChallenges() const
 {
     float minY = std::numeric_limits<float>::max();
-    //float maxY = std::numeric_limits<float>::min();
-    for (const auto& vertexPair : graph.vertices)
-    {
+    for (const auto& vertexPair : graph.vertices) {
         minY = std::min(minY, vertexPair.second.y);
-        //maxY = std::max(maxY, vertexPair.second.y);
     }
 
-    //std::cout << minY << std::endl;
-    //std::cout << maxY << std::endl;
-
-    // Threshold to consider a vertex as part of the model's bottom
     const float bottomThreshold = minY;
-    //const float bottomThresholdTolerance = (maxY - minY) / 100000.0;
-    //std::cout << bottomThresholdTolerance << std::endl;
+    std::vector<Vertex> problematicVertices;
 
-    std::vector<size_t> problematicVertices;
-
-    for (const auto& vertexPair : graph.vertices)
-    {
+    for (const auto& vertexPair : graph.vertices) {
         const auto& vertex = vertexPair.second;
 
-        // Skip vertices at the model's bottom
         if (vertex.y <= bottomThreshold) continue;
 
         bool hasLowerNeighbor = false;
-
-        // Check connections for a lower neighbor
         auto range = graph.edges.equal_range(vertexPair.first);
-        for (auto it = range.first; it != range.second && !hasLowerNeighbor; ++it)
-        {
+        for (auto it = range.first; it != range.second && !hasLowerNeighbor; ++it) {
             const auto& neighborVertex = graph.vertices.at(it->second.endVertexId);
-            if (neighborVertex.y < vertex.y)
-            {
+            if (neighborVertex.y < vertex.y) {
                 hasLowerNeighbor = true;
             }
         }
 
-        // If a vertex lacks lower neighbors and isn't at the bottom, it's potentially problematic
-        if (!hasLowerNeighbor)
-        {
-            problematicVertices.push_back(vertexPair.first);
+        if (!hasLowerNeighbor) {
+            problematicVertices.push_back(vertex);
         }
     }
 
-    // Output or handle problematic vertices
-    std::cout << "Vertices potentially needing support: ";
-    for (auto id : problematicVertices)
-    {
-        std::cout << id << " ";
-    }
-    std::cout << std::endl;
+    return problematicVertices;
 }

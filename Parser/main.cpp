@@ -1,32 +1,72 @@
 #include <iostream>
 #include "parser.hpp"
 
-int main()
+int main(int argc, char* argv[])
 {
-    // Example usage for ASCII STL file
-    ASCII_STLFile asciiStl;
-    // Parse the ASCII STL file
-    asciiStl.parse("../Models/Test_sword_ASCII.stl");
-    //std::cout << "ASCII STL Vertices:" << std::endl;
-    // Print the vertices
-    //asciiStl.printVertices();
-    // Print graph's statistics
-    //asciiStl.printGraphStats();
-    // Examplary usage of function to identify problematic points
-    asciiStl.identifySupportChallenges();
+    if (argc != 2)
+    {
+        std::cerr << "Usage: " << argv[0] << " <STL file path>" << std::endl;
+        return 1;
+    }
 
+    std::string stlPath = argv[1];
 
-    
-    // Example usage for Binary STL file
-    Binary_STLFile binaryStl;
-    // Parse the Binary STL file
-    binaryStl.parse("../Models/Test_sword_Binary.stl");
-    //std::cout << "Binary STL Vertices:" << std::endl;
-    // Print the vertices
-    //binaryStl.printVertices();
+    STLFileType type = determineSTLFileType(stlPath);
 
-    binaryStl.identifySupportChallenges();
-    
+    switch (type)
+    {
+        case STLFileType::ASCII:
+        {
+            ASCII_STLFile stlFile;
+
+            // Attempt to parse the STL file and identify problematic vertices
+            stlFile.parse(stlPath);
+
+            auto problematicVertices = stlFile.identifySupportChallenges();
+
+            // Print the problematic vertices
+            for (const auto& vertex : problematicVertices)
+            {
+                std::cout << vertex.x << " " << vertex.y << " " << vertex.z << std::endl;
+            }
+
+            // Print the problematic vertices
+            for (const auto& vertex : problematicVertices)
+            {
+                std::cout << vertex.x << " " << vertex.y << " " << vertex.z << std::endl;
+            }
+
+            break;
+        }
+        case STLFileType::Binary:
+        {
+            Binary_STLFile stlFile;
+
+            // Attempt to parse the STL file and identify problematic vertices
+            stlFile.parse(stlPath);
+
+            auto problematicVertices = stlFile.identifySupportChallenges();
+
+            // Print the problematic vertices
+            for (const auto& vertex : problematicVertices)
+            {
+                std::cout << vertex.x << " " << vertex.y << " " << vertex.z << std::endl;
+            }
+
+            // Print the problematic vertices
+            for (const auto& vertex : problematicVertices)
+            {
+                std::cout << vertex.x << " " << vertex.y << " " << vertex.z << std::endl;
+            }
+
+            break;
+        }
+        default:
+        {
+            std::cerr << "Unable to determine the STL file type." << std::endl;
+            break;
+        }
+    }   
 
     return 0;
 }
